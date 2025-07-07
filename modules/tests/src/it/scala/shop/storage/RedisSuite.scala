@@ -27,10 +27,11 @@ import eu.timepit.refined.cats._
 import org.typelevel.log4cats.noop.NoOpLogger
 import pdi.jwt._
 import suite.ResourceSuite
+import org.typelevel.log4cats.SelfAwareStructuredLogger
 
 object RedisSuite extends ResourceSuite {
 
-  implicit val logger = NoOpLogger[IO]
+  implicit val logger: SelfAwareStructuredLogger[cats.effect.IO] = NoOpLogger[IO]
 
   type Res = RedisCommands[IO, String, String]
 
