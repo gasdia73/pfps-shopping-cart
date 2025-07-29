@@ -100,7 +100,7 @@ object CheckoutSuite extends SimpleIOSuite with Checkers {
     crd <- cardGen
   } yield (uid, pid, oid, crt, crd)
 
-  implicit val bg: Background[IO] = TestBackground.NoOp
+  implicit val bg: Background[IO]                = TestBackground.NoOp
   implicit val lg: SelfAwareStructuredLogger[IO] = NoOpLogger[IO]
 
   test("empty cart") {
@@ -109,9 +109,9 @@ object CheckoutSuite extends SimpleIOSuite with Checkers {
         Checkout[IO](successfulClient(pid), emptyCart, successfulOrders(oid), retryPolicy)
           .process(uid, card)
           .attempt
-          .map {
-            case Left(EmptyCartError) => success
-            case _                    => failure("Cart was not empty as expected")
+          .flatMap {
+            case Left(EmptyCartError) => IO.pure(success)
+            case _                    => IO.pure(failure("Cart was not empty as expected"))
           }
     }
   }
